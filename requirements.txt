@@ -16,6 +16,7 @@ click==8.4.2
 distro==1.9.0
 durationpy==0.10
 faiss-cpu==1.14.3
+Faker==40.35.0
 fastapi==0.139.2
 filelock==3.32.0
 flatbuffers==25.12.19
