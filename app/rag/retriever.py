@@ -1,19 +1,20 @@
 import faiss
 import numpy as np
 
-from app.rag.embeddings import model
+from app.rag.embeddings import get_model
 
 
 class Retriever:
 
     def __init__(self):
-
         self.index = None
         self.chunks = None
 
     def build(self, chunks):
 
         self.chunks = chunks
+
+        model = get_model()
 
         embeddings = model.encode(
             [chunk["text"] for chunk in chunks],
@@ -29,6 +30,8 @@ class Retriever:
         )
 
     def search(self, question, k=3):
+
+        model = get_model()
 
         query_embedding = model.encode(
             [question],

@@ -3,24 +3,34 @@ from app.rag.chunker import chunk_documents
 from app.rag.retriever import Retriever
 from app.rag.qa import answer_question
 
-retriever = Retriever()
+retriever = None
 
-documents = load_documents()
-chunks = chunk_documents(documents)
 
-retriever.build(chunks)
+def get_retriever():
+    global retriever
+
+    if retriever is None:
+
+        retriever = Retriever()
+
+        documents = load_documents()
+        chunks = chunk_documents(documents)
+
+        retriever.build(chunks)
+
+    return retriever
 
 
 def ask_documents(question):
+
+    retriever = get_retriever()
 
     relevant_chunks = retriever.search(
         question,
         k=3,
     )
 
-    answer = answer_question(
+    return answer_question(
         question,
         relevant_chunks,
     )
-
-    return answer
