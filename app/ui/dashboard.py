@@ -52,7 +52,12 @@ st.set_page_config(
 
 load_styles()
 render_sidebar()
+
+st.write("🚀 Initializing database...")
+
 initialize_database()
+
+st.write("✅ Database initialized")
 
 # --------------------------------------------------
 # Load Metrics
