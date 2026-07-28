@@ -22,15 +22,19 @@ The application automatically generates SQL, queries a product analytics databas
 
 ### AI Assistant
 
-![AI Assistant](assets/ai-chat.png)
+![AI Assistant](assets/ai-assistant.png)
 
-### Analytics Dashboard
+### Analytics Dashboard_1
 
-![Analytics](assets/analytics.png)
+![Analytics](assets/analytics-dashboard.png)
+
+### Analytics Dashboard_2
+
+![Analytics](assets/analytics-dashboard_2.png)
 
 ### Knowledge Base
 
-![Knowledge Base](assets/rag.png)
+![Knowledge Base](assets/knowledge-base.png)
 
 
 ## 🚀 Features
