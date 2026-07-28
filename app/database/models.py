@@ -52,6 +52,10 @@ class User(Base):
         nullable=False
     )
 
+    persona = Column(
+    String,
+    nullable=False)
+
 
 class Event(Base):
     """
@@ -71,6 +75,10 @@ class Event(Base):
         ForeignKey("users.user_id"),
         nullable=False
     )
+
+    session_id = Column(
+    String,
+    nullable=False)
 
     event_name = Column(
         String,
