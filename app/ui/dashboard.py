@@ -34,6 +34,7 @@ from app.ui.styles import load_styles
 from app.ui.ai_tab import render_ai_tab
 from app.ui.analytics_tab import render_analytics_tab
 from app.ui.docs_tab import render_docs_tab
+from app.database.initialize_database import initialize_database
 
 # --------------------------------------------------
 # Page Configuration
@@ -51,6 +52,7 @@ st.set_page_config(
 
 load_styles()
 render_sidebar()
+initialize_database()
 
 # --------------------------------------------------
 # Load Metrics
