@@ -1,3 +1,4 @@
+import streamlit as st
 from sqlalchemy import inspect, text
 
 from app.database.database import engine, Base
@@ -8,6 +9,11 @@ from app.data_generator.generate_events import generate_events
 
 
 def initialize_database():
+    
+    if st.session_state.get("db_initialized"):
+        return
+
+    st.session_state["db_initialized"] = True
     print("===== initialize_database called =====")
     print(f"ENGINE URL: {engine.url}")
 
