@@ -1,13 +1,20 @@
 import sys
 from pathlib import Path
 
+# --------------------------------------------------
+# Make project root importable
+# --------------------------------------------------
+
 PROJECT_ROOT = Path(__file__).resolve().parents[2]
 
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
+# --------------------------------------------------
+# Imports
+# --------------------------------------------------
+
 import streamlit as st
-import plotly.express as px
 
 from app.analytics.metrics import (
     calculate_dau,
@@ -15,124 +22,158 @@ from app.analytics.metrics import (
     calculate_mau,
     calculate_new_users,
     calculate_feature_adoption,
+    calculate_funnel,
+    calculate_stickiness,
+    calculate_growth_accounting,
 )
+
+from app.insights.narrative import generate_narrative
+
+from app.ui.sidebar import render_sidebar
+from app.ui.styles import load_styles
+from app.ui.ai_tab import render_ai_tab
+from app.ui.analytics_tab import render_analytics_tab
+from app.ui.docs_tab import render_docs_tab
+
+# --------------------------------------------------
+# Page Configuration
+# --------------------------------------------------
 
 st.set_page_config(
     page_title="AI Product Analytics Copilot",
     page_icon="📊",
-    layout="wide"
+    layout="wide",
 )
 
-st.title("📊 AI Product Analytics Copilot")
+# --------------------------------------------------
+# Theme
+# --------------------------------------------------
 
-st.divider()
+load_styles()
+render_sidebar()
 
-# -------------------------
-# Load Data
-# -------------------------
+# --------------------------------------------------
+# Load Metrics
+# --------------------------------------------------
 
 dau = calculate_dau()
-
 wau = calculate_wau()
-
 mau = calculate_mau()
 
 new_users = calculate_new_users()
-
 features = calculate_feature_adoption()
+funnel = calculate_funnel()
+stickiness = calculate_stickiness()
+growth = calculate_growth_accounting()
 
-# -------------------------
-# KPI Row
-# -------------------------
+executive_brief = generate_narrative()
 
-col1, col2, col3, col4 = st.columns(4)
+# --------------------------------------------------
+# Header
+# --------------------------------------------------
+
+st.markdown(
+    """
+# 🤖 AI Product Analytics Copilot
+
+### Transform natural language into product insights using AI
+
+Generate SQL, analyze product metrics, visualize trends, search product documentation using Retrieval-Augmented Generation (RAG), and receive executive summaries — all from one intelligent assistant.
+"""
+)
+
+doc_count = len(list(Path("docs").glob("*.pdf")))
+
+col1, col2, col3 = st.columns(3)
 
 with col1:
     st.metric(
-        "Latest DAU",
-        int(dau.iloc[-1]["dau"])
+        "🤖 AI Model",
+        "Qwen 2.5",
     )
 
 with col2:
     st.metric(
-        "Latest WAU",
-        int(wau.iloc[-1]["wau"])
+        "🗄️ Database",
+        "SQLite",
     )
 
 with col3:
     st.metric(
-        "Latest MAU",
-        int(mau.iloc[-1]["mau"])
+        "📚 Documents",
+        doc_count,
     )
 
-with col4:
-    st.metric(
-        "Total Users",
-        int(new_users["new_users"].sum())
-    )
+st.info(
+    """
+💡 **Try asking**
+
+• Show DAU trend
+
+• Top countries by active users
+
+• Show feature adoption
+
+• Compare WAU vs MAU
+
+• What does the SQL interview guide teach?
+
+• Explain SQL window functions
+"""
+)
 
 st.divider()
 
-# -------------------------
-# DAU
-# -------------------------
+# --------------------------------------------------
+# Executive Brief
+# --------------------------------------------------
 
-fig = px.line(
-    dau,
-    x="activity_date",
-    y="dau",
-    title="Daily Active Users"
+st.subheader("📋 Executive Brief")
+
+with st.container(border=True):
+    st.markdown(executive_brief)
+
+st.divider()
+
+# --------------------------------------------------
+# Tabs
+# --------------------------------------------------
+
+tab1, tab2, tab3 = st.tabs(
+    [
+        "🤖 AI Assistant",
+        "📈 Analytics Dashboard",
+        "📚 Knowledge Base",
+    ]
 )
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
+with tab1:
 
-# -------------------------
-# WAU
-# -------------------------
+    render_ai_tab()
 
-fig = px.line(
-    wau,
-    x="week",
-    y="wau",
-    title="Weekly Active Users"
-)
+with tab2:
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
+    render_analytics_tab(
+        dau,
+        wau,
+        mau,
+        new_users,
+        features,
+        funnel,
+        stickiness,
+        growth,
+    )
 
-# -------------------------
-# MAU
-# -------------------------
+with tab3:
 
-fig = px.line(
-    mau,
-    x="month",
-    y="mau",
-    title="Monthly Active Users"
-)
+    render_docs_tab()
 
-st.plotly_chart(
-    fig,
-    use_container_width=True
-)
+# --------------------------------------------------
+# Footer
+# --------------------------------------------------
 
-# -------------------------
-# Feature Adoption
-# -------------------------
+st.divider()
 
-fig = px.bar(
-    features,
-    x="feature_name",
-    y="total_events",
-    title="Feature Adoption"
-)
-
-st.plotly_chart(
-    fig,
-    use_container_width=True
+st.caption(
+    "Built with ❤️ by Shikha Pathak | Python • Streamlit • Ollama • Qwen 2.5 • SQLite • Plotly • FAISS"
 )
