@@ -1,20 +1,22 @@
-from sqlalchemy import create_engine
-from sqlalchemy.orm import declarative_base
-from sqlalchemy.orm import sessionmaker
+from pathlib import Path
 
-from app.core.config import settings
+from sqlalchemy import create_engine
+from sqlalchemy.orm import declarative_base, sessionmaker
+
+# Always point to the same SQLite file
+DB_PATH = Path(__file__).resolve().parents[2] / "analytics.db"
 
 engine = create_engine(
-    settings.DATABASE_URL,
+    f"sqlite:///{DB_PATH}",
     echo=False,
-    future=True
+    future=True,
 )
 
 SessionLocal = sessionmaker(
     bind=engine,
     autocommit=False,
     autoflush=False,
-    future=True
+    future=True,
 )
 
 Base = declarative_base()

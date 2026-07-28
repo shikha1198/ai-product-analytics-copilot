@@ -1,3 +1,4 @@
+import traceback
 import pandas as pd
 from sqlalchemy import text
 
@@ -16,14 +17,25 @@ from app.analytics.queries import (
 )
 
 
-def run_query(query: str) -> pd.DataFrame:
-    """
-    Execute SQL and return a DataFrame.
-    """
-    return pd.read_sql(
-        text(query),
-        con=engine,
-    )
+def run_query(query: str):
+
+    print("=" * 80)
+    print("ENGINE:", engine.url)
+    print("QUERY:")
+    print(query)
+
+    try:
+        return pd.read_sql(
+            text(query),
+            con=engine,
+        )
+
+    except Exception as e:
+
+        print("\nFULL EXCEPTION:")
+        traceback.print_exc()
+
+        raise
 
 
 # --------------------------------------------------
@@ -122,6 +134,7 @@ def calculate_stickiness():
     return run_query(
         STICKINESS_QUERY
     )
+
 def calculate_growth_accounting():
 
     return run_query(

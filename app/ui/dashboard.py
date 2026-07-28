@@ -52,6 +52,7 @@ st.set_page_config(
 
 load_styles()
 render_sidebar()
+initialize_database()
 
 st.write("🚀 Initializing database...")
 
@@ -72,7 +73,6 @@ features = calculate_feature_adoption()
 funnel = calculate_funnel()
 stickiness = calculate_stickiness()
 growth = calculate_growth_accounting()
-
 executive_brief = generate_narrative()
 
 # --------------------------------------------------
